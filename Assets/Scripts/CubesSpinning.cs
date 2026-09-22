@@ -50,6 +50,7 @@ public class CubesSpinning : MonoBehaviour
             SetCubePosition(cubes[i], startAngles[i]);
         }
     }
+    //==================mew========================================
     private void SetCubePosition(GameObject cube, float angleDeg)
     {
         float rad = angleDeg * Mathf.Deg2Rad;
