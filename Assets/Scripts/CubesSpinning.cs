@@ -23,7 +23,7 @@ public class CubesSpinning : MonoBehaviour
         {
             cubes = new GameObject[cubeCount];
             startAngles = new float[cubeCount];
-            float angleStep = 360f / cubeCount;
+            var angleStep = 360f / cubeCount;
 
             for (int i = 0; i < cubeCount; i++)
             {
@@ -38,12 +38,12 @@ public class CubesSpinning : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Íå íàçíà÷åí ïðåôàá");
+            Debug.LogError("ÐÐµ Ð½Ð°Ð·Ð½Ð°Ñ‡ÐµÐ½ Ð¿Ñ€ÐµÑ„Ð°Ð±");
         }
     }
     private void Update()
     {
-        float dir = rotateClockWise ? -1f : 1f;
+        var dir = rotateClockWise ? -1f : 1f;
         transform.Rotate(0f, spinningSpeed * dir * Time.deltaTime, 0f);
         for (int i = 0; i < cubeCount; i++)
         {
@@ -53,9 +53,9 @@ public class CubesSpinning : MonoBehaviour
     //==================mew========================================
     private void SetCubePosition(GameObject cube, float angleDeg)
     {
-        float rad = angleDeg * Mathf.Deg2Rad;
-        float x = Mathf.Cos(rad) * spinningRadius;
-        float z = Mathf.Sin(rad) * spinningRadius;
+        var rad = angleDeg * Mathf.Deg2Rad;
+        var x = Mathf.Cos(rad) * spinningRadius;
+        var z = Mathf.Sin(rad) * spinningRadius;
         cube.transform.localPosition = new Vector3(x, 0f, z);
     }
 }
