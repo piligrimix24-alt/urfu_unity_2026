@@ -1,0 +1,35 @@
+{
+    "version": 1,
+    "name": "PlayerInputActions",
+    "maps": [
+        {
+            "name": "Dice",
+            "id": "748963b7-fb03-4916-983e-383dbbc894de",
+            "actions": [
+                {
+                    "name": "Roll",
+                    "type": "Button",
+                    "id": "371c9924-2edd-41e6-a41e-aa9f28eef7cd",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "877878ac-46fa-4549-a72f-3a86579aaecb",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Roll",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
