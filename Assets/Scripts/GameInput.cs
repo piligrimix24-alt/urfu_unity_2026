@@ -6,8 +6,8 @@ public class GameInput : MonoBehaviour
 {
     public static GameInput Instance { get; private set; }
     private PlayerInputActions _playerInputActions;
-    public event EventHandler OnPlayerRoll;
     private bool _isDisposed = false;
+    public event EventHandler OnPlayerRoll;
 
     private void Awake()
     {
@@ -25,7 +25,7 @@ public class GameInput : MonoBehaviour
     {
         Dispose();
     }
-
+    // ============================================================mew
     private void Dispose()
     {
         if (_isDisposed) return;

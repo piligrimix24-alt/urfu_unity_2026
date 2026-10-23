@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class Dice : MonoBehaviour
 {
-    [Header("Настройки броска")]
+    [Header("Сила броска")]
     [SerializeField] private float minForce = 20f;
     [SerializeField] private float maxForce = 40f;
     [SerializeField] private float minTorque = 3f;
@@ -14,27 +14,10 @@ public class Dice : MonoBehaviour
         Vector3.up, Vector3.down, Vector3.right, Vector3.left, Vector3.forward, Vector3.back
     };
     private int[] _faceValues = { 1, 6, 4, 3, 2, 5 };
-    // ============================================================mew
+
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
-    }
-
-    private void Start()
-    {
-        if (GameInput.Instance != null)
-            GameInput.Instance.OnPlayerRoll += Dices_OnPlayerRoll;
-    }
-
-    private void OnDestroy()
-    {
-        if (GameInput.Instance != null)
-            GameInput.Instance.OnPlayerRoll -= Dices_OnPlayerRoll;
-    }
-    // ============================================================mew
-    private void Dices_OnPlayerRoll(object sender, System.EventArgs e)
-    {
-        Roll();
     }
 
     public void Roll()
