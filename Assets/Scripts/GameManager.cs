@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,12 +7,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private Dice dicePrefab;
 
-    [Header("Количество кубиков")]
-    [SerializeField] private int diceCount = 3;
-
-    [Header("Ссылки на компоненты")]
-    [SerializeField] private GameUI gameUI;
-
+    private int _diceCount = 3;
     private Vector3 _spawnCenter = new Vector3(0f, 5f, 0f);
     private float _spawnRadius = 6f;
     private List<Dice> _diceList = new List<Dice>();
@@ -21,21 +17,24 @@ public class GameManager : MonoBehaviour
     private int _maxPossible;
     private int _targetScore;
 
+    public static event Action<int, int> OnRoundResult;
+    public static event Action<int> OnTargetChanged;
+    public static event Action<int> OnDiceCountChanged;
+
+    private void Awake()
+    {
+        _minPossible = _diceCount * 1;
+        _maxPossible = _diceCount * 6;
+    }
+
     private void Start()
     {
         if (GameInput.Instance != null)
             GameInput.Instance.OnPlayerRoll += OnPlayerRoll;
 
-        _minPossible = diceCount * 1;
-        _maxPossible = diceCount * 6;
-
-        SpawnDice(diceCount);
-
-        if (gameUI != null)
-        {
-            gameUI.UpdateDiceCount(diceCount);
-            GenerateTarget();
-        }
+        SpawnDice(_diceCount);
+        GenerateTarget();
+        OnDiceCountChanged?.Invoke(_diceCount);
     }
 
     private void OnDestroy()
@@ -44,26 +43,41 @@ public class GameManager : MonoBehaviour
             GameInput.Instance.OnPlayerRoll -= OnPlayerRoll;
     }
 
-    private void OnPlayerRoll(object sender, System.EventArgs e)
+    private void OnPlayerRoll(object sender, EventArgs e)
     {
         RollAllDice();
     }
 
+    public void SetDiceCount(int count)
+    {
+        if (count <= 0) return;
+
+        _diceCount = count;
+        _minPossible = _diceCount * 1;
+        _maxPossible = _diceCount * 6;
+
+        SpawnDice(_diceCount);
+        GenerateTarget();
+        OnDiceCountChanged?.Invoke(_diceCount);
+    }
+
     private void GenerateTarget()
     {
-        _targetScore = Random.Range(_minPossible, _maxPossible - 3);
-
-        if (gameUI != null)
-        {
-            gameUI.UpdateTarget(_targetScore);
-        }
+        _targetScore = UnityEngine.Random.Range(_minPossible, _maxPossible - 3);
+        OnTargetChanged?.Invoke(_targetScore);
     }
 
     public void SpawnDice(int count)
     {
+        foreach (var dice in _diceList)
+        {
+            if (dice != null) Destroy(dice.gameObject);
+        }
+        _diceList.Clear();
+
         for (int i = 0; i < count; i++)
         {
-            var offset = Random.insideUnitSphere * _spawnRadius;
+            var offset = UnityEngine.Random.insideUnitSphere * _spawnRadius;
             offset.y = 0f;
             var pos = _spawnCenter + offset;
             var dice = Instantiate(dicePrefab, pos, Quaternion.identity);
@@ -76,8 +90,8 @@ public class GameManager : MonoBehaviour
         if (_isRolling) return;
         _isRolling = true;
 
-        if (gameUI != null) gameUI.ResetColor();
         GenerateTarget();
+
         foreach (var dice in _diceList)
         {
             if (dice != null) dice.Roll();
@@ -111,12 +125,10 @@ public class GameManager : MonoBehaviour
         int total = 0;
         foreach (var dice in _diceList)
         {
-            total += dice.GetTopFaceValue();
+            if (dice != null) total += dice.GetTopFaceValue();
         }
-        if (gameUI != null)
-        {
-            gameUI.ShowRoundResult(total, _targetScore);
-        }
+
+        OnRoundResult?.Invoke(total, _targetScore);
         _isRolling = false;
     }
 }
